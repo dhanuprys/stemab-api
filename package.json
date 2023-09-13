@@ -1,0 +1,20 @@
+{
+  "name": "stemsi-absen",
+  "version": "1.0.0",
+  "description": "Stemsi absensi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-tsc": "tsc --watch",
+    "watch-server": "nodemon ./build/index.js"
+  },
+  "author": "ICT STEMSI",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.2",
+    "@types/uniqid": "^5.3.2",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.2.2",
+    "uniqid": "^5.4.0"
+  }
+}
