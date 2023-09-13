@@ -1,25 +1,26 @@
-import Hapi, { ReqRefDefaults } from '@hapi/hapi';
+import process from 'process';
+import Hapi from '@hapi/hapi';
+import routes from './routes';
+
+const HOST: string = process.env.HTTP_HOST || '0.0.0.0';
+const PORT: string = process.env.HTTP_PORT || '3010';
 
 const init = async () => {
-  const server = Hapi.server({
-    host: '0.0.0.0',
-    port: 3000
+  const server: Hapi.Server<Hapi.ServerApplicationState> = Hapi.server({
+    host: HOST,
+    port: PORT
   });
 
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (
-      request: Hapi.Request<ReqRefDefaults>,
-      h: Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
-    ) => {
-      return 'Hello World!';
-    }
-  })
+  // Mendaftarkan seluruh rute pada API
+  server.route(routes);
 
   await server.start();
 
   console.log('Server started!');
 }
+
+process.addListener('unhandledRejection', (error) => {
+  console.log(error);
+});
 
 init();
