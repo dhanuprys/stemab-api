@@ -23,16 +23,17 @@ export default async function loginUser(
 
   // Memastikan input dari client adalah sebuah body raw (string)
   if (typeof payload !== 'string') {
-    return 'Rejected';
+    return 'Rejected#1';
   }
 
+  // Jika NISN tidak valid maka request akan ditolak
   if (realNISN === null) {
-    return 'Rejected';
+    return 'Rejected#2';
   }
 
   // Cek apakah kunci akses sudah simetris antara client dan server
   if (!checkDaylock(userDaylock)) {
-    return 'Rejected';
+    return 'Rejected#3';
   }
  
   // Cek apakah user sebelumnya sudah melakukan login atau belum
@@ -40,11 +41,10 @@ export default async function loginUser(
     return 'Already';
   }
 
+  // Menambahkan user ke daftar login
   if (await user.login(userDaylock, '27492782')) {
     return 'Success';
   }
-
-  console.log('Payload is string');
   
   return 'OKE';
 }

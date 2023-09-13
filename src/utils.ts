@@ -32,3 +32,9 @@ export function parseNISN(payload: string): string | null {
 
   return payload;
 }
+
+export function getCurrentDate() {
+  const date = new Date();
+
+  return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+}

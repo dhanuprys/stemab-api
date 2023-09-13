@@ -1,4 +1,5 @@
 import Database from '../database';
+import { getCurrentDate } from '../utils';
 
 class UserModel {
   protected connection: any;
@@ -37,9 +38,9 @@ class UserModel {
       result = await this.connection.query(
         `
           INSERT INTO stemsi.absensi (daylock,nisn,timestamp) 
-          VALUES (?, ?, curdate())
+          VALUES (?, ?, ?)
         `,
-        [ daylock, nisn ]
+        [ daylock, nisn, getCurrentDate() ]
       )
     } catch (error) {
 
