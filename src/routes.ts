@@ -9,7 +9,7 @@ const routeCollections: Hapi.ServerRoute<Hapi.ReqRefDefaults>[] = [
       request: Hapi.Request<Hapi.ReqRefDefaults>,
       h: Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
     ) => {
-      return 'SERVICE TEST';
+      return 'STEMSI.DEV';
     }
   },
   {

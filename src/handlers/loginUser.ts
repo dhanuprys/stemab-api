@@ -1,7 +1,8 @@
 import Hapi from '@hapi/hapi';
 import { checkDaylock, parseNISN } from '../utils';
 import Database from '../database';
-import UserModel from '../models/userModel';
+import UserModel, { DatabaseBlueprint } from '../models/userModel';
+import { RawRESTResponse } from '../response';
 
 /**
  * 
@@ -12,7 +13,7 @@ import UserModel from '../models/userModel';
 export default async function loginUser(
   request: Hapi.Request<Hapi.ReqRefDefaults>,
   h: Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
-) {
+): Promise<RawRESTResponse<DatabaseBlueprint>> {
   const { daylock: userDaylock } = request.params;
   const payload: string = <string>request.payload;
   const user = new UserModel(
@@ -23,28 +24,50 @@ export default async function loginUser(
 
   // Memastikan input dari client adalah sebuah body raw (string)
   if (typeof payload !== 'string') {
-    return 'Rejected#1';
+    return {
+      status: false,
+      message: 'rejected#1'
+    };
   }
 
   // Jika NISN tidak valid maka request akan ditolak
-  if (realNISN === null) {
-    return 'Rejected#2';
-  }
+  // if (realNISN === null) {
+  //   return {
+  //     status: false, 
+  //     mesasge: 'rejected#2'
+  //   };
+  // }
 
   // Cek apakah kunci akses sudah simetris antara client dan server
-  if (!checkDaylock(userDaylock)) {
-    return 'Rejected#3';
+  if (!checkDaylock(userDaylock, true)) {
+    return {
+      status: false,
+      message: 'rejected#2'
+    }
   }
  
   // Cek apakah user sebelumnya sudah melakukan login atau belum
-  if (await user.isLogin(userDaylock, realNISN)) {
-    return 'Already';
+  let loginStatus = await user.isLogin(userDaylock, '2749278');
+  if (loginStatus !== null) {
+    return {
+      status: true,
+      message: 'already',
+      data: loginStatus
+    }
   }
 
   // Menambahkan user ke daftar login
-  if (await user.login(userDaylock, '27492782')) {
-    return 'Success';
+  loginStatus = await user.login(userDaylock, '274927820');
+  if (loginStatus !== null) {
+    return {
+      status: true,
+      message: 'created',
+      data: loginStatus
+    };
   }
   
-  return 'OKE';
+  return {
+    status: false,
+    message: 'failed'
+  };
 }
