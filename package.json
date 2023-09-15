@@ -6,17 +6,24 @@
   "scripts": {
     "build": "tsc",
     "watch-tsc": "tsc --watch",
-    "watch-server": "nodemon ./build/index.js"
+    "watch-server": "DB_HOST=10.200.1.251 nodemon ./build/index.js"
   },
   "author": "ICT STEMSI",
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^21.3.2",
-    "@types/node": "^20.6.0",
-    "@types/uniqid": "^5.3.2",
+    "cross-env": "^7.0.3",
     "mariadb": "^3.2.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2",
     "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/moment": "^2.13.0",
+    "@types/moment-timezone": "^0.5.30",
+    "@types/node": "^20.6.0",
+    "@types/uniqid": "^5.3.2"
   }
 }
