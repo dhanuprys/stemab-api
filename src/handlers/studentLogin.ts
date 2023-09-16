@@ -2,7 +2,7 @@ import Hapi from '@hapi/hapi';
 import { LoginCredential, checkDaylock, parseNISNLogin } from '../utils';
 import Database from '../database';
 import PresenceModel, { DatabaseBlueprint } from '../models/PresenceModel';
-import { RawRESTResponse } from '../response';
+import { RawRESTResponse, createRESTResponse } from '../response';
 import StudentModel from '../models/StudentModel';
 
 /**
@@ -25,10 +25,7 @@ export default async function studentLogin(
 
   // Memastikan input dari client adalah sebuah body raw (string)
   if (typeof payload !== 'string') {
-    return {
-      status: false,
-      message: 'rejected#1'
-    };
+    return createRESTResponse(false, 'rejected#1');
   }
 
   // Jika NISN tidak valid maka request akan ditolak
@@ -41,43 +38,34 @@ export default async function studentLogin(
 
   // Cek apakah kunci akses sudah simetris antara client dan server
   if (!checkDaylock(userDaylock, true)) {
-    return {
-      status: false,
-      message: 'rejected#2'
-    }
+    return createRESTResponse(false, 'reject#2');
   }
 
   // Cek apakah NISN dan NIS yang dimasukkan siswa ada pada database atau tidak
   let userAvailability = await student.isValid(userCredential as LoginCredential);
   if (!userAvailability) {
-    return {
-      status: false,
-      message: 'unknown'
-    }
+    return createRESTResponse(false, 'unknown');
   }
  
   // Cek apakah user sebelumnya sudah melakukan login atau belum
   let loginStatus = await login.isLogin(userDaylock, '2749278');
   if (loginStatus !== null) {
-    return {
-      status: true,
-      message: 'already',
-      data: loginStatus
-    }
+    return createRESTResponse(
+      true,
+      'already',
+      loginStatus
+    );
   }
 
   // Menambahkan user ke daftar login
   loginStatus = await login.login(userDaylock, '274927820');
   if (loginStatus !== null) {
-    return {
-      status: true,
-      message: 'created',
-      data: loginStatus
-    };
+    return createRESTResponse(
+      true,
+      'created',
+      loginStatus
+    );
   }
   
-  return {
-    status: false,
-    message: 'failed'
-  };
+  return createRESTResponse(false, 'failed');
 }
