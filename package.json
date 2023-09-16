@@ -4,9 +4,11 @@
   "description": "Stemsi absensi",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
     "build": "tsc",
     "watch-tsc": "tsc --watch",
-    "watch-server": "DB_HOST=10.200.1.251 nodemon ./build/index.js"
+    "watch-server": "cross-env DB_HOST=127.0.0.1 DB_PORT=9010 nodemon ./build/index.js",
+    "start": "node ./build/index.js"
   },
   "author": "ICT STEMSI",
   "license": "ISC",
@@ -24,6 +26,8 @@
     "@types/moment": "^2.13.0",
     "@types/moment-timezone": "^0.5.30",
     "@types/node": "^20.6.0",
-    "@types/uniqid": "^5.3.2"
+    "@types/uniqid": "^5.3.2",
+    "axios": "^1.5.0",
+    "jest": "^29.7.0"
   }
 }

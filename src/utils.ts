@@ -1,8 +1,17 @@
+import moment from 'moment-timezone';
+
+export type LoginCredential = {
+  nisn: string,
+  nis: string
+}
+
 /**
+ * Daylock digunakan untuk menyinkronkan kunci akses antara client dengan
+ * server sehingga alamat akses akan bersifat dinamis
  * 
- * @param encryptedTime string
- * @param bypass boolean
- * @returns boolean
+ * @param {string} encryptedTime 
+ * @param {boolean} bypass
+ * @returns {boolean}
  */
 export function checkDaylock(
   encryptedTime: string, 
@@ -20,21 +29,41 @@ export function checkDaylock(
   return currentFormat === encryptedTime;
 }
 
-export function parseNISN(payload: string): string | null {
+/**
+ * Mengubah data NISN yang di-enskripsi menjadi string NISN yang 
+ * dapat dibaca
+ * 
+ * NISN|JAM+(HARI-1)|NIS
+ * 
+ * @param {string} payload Data NISN yang terinskripsi
+ * @returns {string | null}
+ */
+export function parseNISNLogin(payload: string): any {
   const date = new Date();
-  const realNISN: string = Buffer.from(payload, 'base64')
+  const [ nisn, nis ] = Buffer.from(payload, 'base64')
                                     .toString('utf-8')
-                                    .split(`|${date.getUTCHours()}|`)[0];
+                                    .split(`|${date.getUTCHours()+(date.getDay()-1)}|`);
 
-  if (!realNISN.match(/^[\d]{10}$/)) {
+  if (
+    typeof nisn === undefined 
+    || typeof nis === undefined 
+    || !nisn.match(/^[\d]{10}$/) 
+    || !nis.match(/^[\d]{5}$/)
+  ) {
     return null;
   }
 
-  return payload;
+  return {
+    nisn,
+    nis
+  };
 }
 
-export function getCurrentDate() {
-  const date = new Date();
-
-  return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+/**
+ * Membuat catatan waktu
+ * 
+ * @returns {string}
+ */
+export function getCurrentDate(): string {
+  return moment().format('D MMMM YY, hh:mm:ss');
 }

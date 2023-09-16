@@ -1,8 +1,9 @@
 import Hapi from '@hapi/hapi';
-import { checkDaylock, parseNISN } from '../utils';
+import { LoginCredential, checkDaylock, parseNISNLogin } from '../utils';
 import Database from '../database';
-import UserModel, { DatabaseBlueprint } from '../models/userModel';
+import PresenceModel, { DatabaseBlueprint } from '../models/PresenceModel';
 import { RawRESTResponse } from '../response';
+import StudentModel from '../models/StudentModel';
 
 /**
  * 
@@ -10,17 +11,17 @@ import { RawRESTResponse } from '../response';
  * @param h Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
  * @returns any
  */
-export default async function loginUser(
+export default async function studentLogin(
   request: Hapi.Request<Hapi.ReqRefDefaults>,
   h: Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
 ): Promise<RawRESTResponse<DatabaseBlueprint>> {
   const { daylock: userDaylock } = request.params;
   const payload: string = <string>request.payload;
-  const user = new UserModel(
-    new Database()
-  );
-  const realNISN = parseNISN(payload);
-  await user.setup();
+  const database = new Database();
+  const login: PresenceModel = new PresenceModel(database);
+  const student: StudentModel = new StudentModel(database);
+  const userCredential = parseNISNLogin(payload);
+  await login.setup();
 
   // Memastikan input dari client adalah sebuah body raw (string)
   if (typeof payload !== 'string') {
@@ -31,7 +32,7 @@ export default async function loginUser(
   }
 
   // Jika NISN tidak valid maka request akan ditolak
-  // if (realNISN === null) {
+  // if (userCredential === null) {
   //   return {
   //     status: false, 
   //     mesasge: 'rejected#2'
@@ -45,9 +46,17 @@ export default async function loginUser(
       message: 'rejected#2'
     }
   }
+
+  let userAvailability = await student.isValid(userCredential as LoginCredential);
+  if (!userAvailability) {
+    return {
+      status: false,
+      message: 'unknown'
+    }
+  }
  
   // Cek apakah user sebelumnya sudah melakukan login atau belum
-  let loginStatus = await user.isLogin(userDaylock, '2749278');
+  let loginStatus = await login.isLogin(userDaylock, '2749278');
   if (loginStatus !== null) {
     return {
       status: true,
@@ -57,7 +66,7 @@ export default async function loginUser(
   }
 
   // Menambahkan user ke daftar login
-  loginStatus = await user.login(userDaylock, '274927820');
+  loginStatus = await login.login(userDaylock, '274927820');
   if (loginStatus !== null) {
     return {
       status: true,

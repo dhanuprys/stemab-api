@@ -1,4 +1,3 @@
-import { Console } from 'console';
 import Database from '../database';
 import { getCurrentDate } from '../utils';
 
@@ -9,7 +8,8 @@ export type DatabaseBlueprint = {
   timestamp: string
 };
 
-class UserModel {
+
+class PresenceModel {
   protected connection: any;
 
   constructor(private database: Database) {
@@ -17,14 +17,14 @@ class UserModel {
   }
 
   async setup() {
-    this.connection = await this.database.createConnection();
+    this.connection = await this.database.createNewConnection();
   }
 
   async isLogin(daylock: string, nisn: string): Promise<DatabaseBlueprint | null> {
     let result: string[] = [];
     try {
       result = await this.connection.query(
-        `SELECT * FROM absensi WHERE nisn = ? AND daylock = ?`,
+        `SELECT * FROM presence WHERE nisn = ? AND nis = ?`,
         [ nisn, daylock ]
       );
     } catch (error) {
@@ -69,4 +69,4 @@ class UserModel {
   }
 }
 
-export default UserModel;
+export default PresenceModel;

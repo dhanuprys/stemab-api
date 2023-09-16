@@ -3,6 +3,7 @@ import mariadb from 'mariadb';
 
 class Database {
   private database;
+  private connection;
 
   constructor() {
     this.database = mariadb.createPool({
@@ -11,11 +12,25 @@ class Database {
       password: process.env.DB_PASSWORD,
       // @ts-ignore
       port: process.env.DB_PORT || 3306,
-      database: 'stemsi'
+      database: process.env.DB_NAME || 'stemsi'
     });
+
+    try {
+      this.connection = this.database.getConnection();
+    } catch (error) {
+      console.log('Database error');
+    }
   }
 
-  public async createConnection() {
+  public async getConnection() {
+    return this.connection;
+  }
+
+  /**
+   * Membuat koneksi baru ke database
+   * @returns 
+   */
+  public async createNewConnection() {
     let connection;
 
     try {

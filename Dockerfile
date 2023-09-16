@@ -1,6 +1,6 @@
-FROM node
+FROM node:18
 WORKDIR /app
 COPY . .
 RUN npm ci && npm run build
-CMD ["node", "./build/index.js"]
-EXPOSE 3000
+CMD ["npm", "run", "start"]
+EXPOSE 3010

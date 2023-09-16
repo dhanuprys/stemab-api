@@ -1,7 +1,7 @@
-HTTP_HOST
-HTTP_PORT
-DB_HOST
-DB_USER
-DB_PASSWORD
-DB_PORT
-DB_NAME
+HTTP_HOST     Host dari aplikasi
+HTTP_PORT     Port aplikasi berjalan
+DB_HOST       Alamat host database
+DB_USER       Username database
+DB_PASSWORD   Password database
+DB_PORT       Port database
+DB_NAME       Nama database
