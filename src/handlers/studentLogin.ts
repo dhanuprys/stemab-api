@@ -47,6 +47,7 @@ export default async function studentLogin(
     }
   }
 
+  // Cek apakah NISN dan NIS yang dimasukkan siswa ada pada database atau tidak
   let userAvailability = await student.isValid(userCredential as LoginCredential);
   if (!userAvailability) {
     return {

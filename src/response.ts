@@ -6,3 +6,11 @@ export type RawRESTResponse<T> = {
   message: string,
   data?: T
 };
+
+export function createRESTResponse<T>(status: boolean, message: string, data: T): RawRESTResponse<T> {
+  return {
+    status,
+    message,
+    data
+  }
+}
