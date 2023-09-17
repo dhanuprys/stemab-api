@@ -8,7 +8,10 @@ const PORT: string = process.env.HTTP_PORT || '3010';
 const init = async () => {
   const server: Hapi.Server<Hapi.ServerApplicationState> = Hapi.server({
     host: HOST,
-    port: PORT
+    port: PORT,
+    routes: {
+      cors: true
+    }
   });
 
   // Mendaftarkan seluruh rute pada API
