@@ -14,6 +14,14 @@ const routeCollections: Hapi.ServerRoute<Hapi.ReqRefDefaults>[] = [
       return 'STEMSI.DEV';
     }
   },
+  // Ping server
+  {
+    method: 'GET',
+    path: '/ping',
+    handler: () => {
+      return 'OK';
+    }
+  },
   // Absensi siswa
   {
     method: 'POST',
