@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "tsc",
     "watch-tsc": "tsc --watch",
-    "watch-server": "cross-env DB_HOST=127.0.0.1 DB_PORT=9010 nodemon ./build/index.js",
+    "watch-server": "cross-env DB_PORT=9010 nodemon ./build/index.js",
     "start": "node ./build/index.js"
   },
   "author": "ICT STEMSI",
@@ -19,6 +19,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "nodemon": "^3.0.1",
+    "pm2": "^5.3.0",
     "typescript": "^5.2.2",
     "uniqid": "^5.4.0"
   },

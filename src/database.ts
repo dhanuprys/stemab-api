@@ -2,28 +2,25 @@ import process from 'process';
 import mariadb from 'mariadb';
 
 class Database {
-  private database;
+  private pool;
   private connection;
 
   constructor() {
-    this.database = mariadb.createPool({
+    this.pool = mariadb.createPool({
       host: process.env.DB_HOST || 'localhost', 
       user: process.env.DB_USER || 'root', 
       password: process.env.DB_PASSWORD,
       // @ts-ignore
       port: process.env.DB_PORT || 3306,
-      database: process.env.DB_NAME || 'stemsi'
     });
+    
+    console.log('Database initialized');
 
-    try {
-      this.connection = this.database.getConnection();
-    } catch (error) {
-      console.log('Database error');
-    }
+    this.connection = this.pool.getConnection();
   }
 
   public async getConnection() {
-    return this.connection;
+    return await this.connection;
   }
 
   /**
@@ -33,13 +30,20 @@ class Database {
   public async createNewConnection() {
     let connection;
 
+    console.log('Creating new connection');
+
     try {
-      connection = await this.database.getConnection();
+      connection = await this.pool.getConnection();
+      console.log('Created');
     } catch (error) {
-      console.log('Database error');
+      console.log('Database error: parent');
     }
 
     return connection;
+  }
+
+  public async close() {
+    await this.pool.end();
   }
 }
 

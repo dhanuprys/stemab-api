@@ -43,7 +43,7 @@ export function parseNISNLogin(payload: string): any {
   const [ nisn, nis ] = Buffer.from(payload, 'base64')
                                     .toString('utf-8')
                                     .split(`|${date.getUTCHours()+(date.getDay()-1)}|`);
-
+  console.log(payload);
   if (
     typeof nisn === undefined 
     || typeof nis === undefined 
@@ -65,5 +65,5 @@ export function parseNISNLogin(payload: string): any {
  * @returns {string}
  */
 export function getCurrentDate(): string {
-  return moment().format('D MMMM YY, hh:mm:ss');
+  return moment().tz('Asia/Makasar').format('D-MM-YY, hh:mm:ss');
 }

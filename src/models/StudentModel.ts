@@ -1,8 +1,9 @@
-import Database from '../database';
+import { PoolConnection } from 'mariadb';
 import { LoginCredential } from '../utils';
 
 export type DatabaseBlueprint = {
   id: number,
+  name: string,
   nisn: string,
   nis: string
 };
@@ -12,37 +13,34 @@ export type DatabaseBlueprint = {
  * Digunakan dalam melakukan proses login ke database
  */
 class StudentModel {
-  protected connection: any;
-
-  constructor(private database: Database) {
+  constructor(private connection: PoolConnection) {
     
   }
 
-  async setup() {
-    this.connection = await this.database.getConnection();
+  async close() {
+    await this.connection.end();
   }
 
   /**
    * Mengecek apakah nisn yang dimasukkan siswa pada form login
    * sudah benar atau tidak
    */
-  async isValid(login: LoginCredential): Promise<boolean> {
-    let result: string[] = [];
+  async isAvailable(login: LoginCredential): Promise<DatabaseBlueprint | null> {
+    let result: DatabaseBlueprint[] = [];
     try {
       result = await this.connection.query(
-        `SELECT * FROM siswa WHERE nisn = ? AND nis = ?`,
+        `SELECT * FROM stemsi.student WHERE nisn = ? AND nis = ?`,
         [ login.nisn, login.nis ]
       );
     } catch (error) {
       console.log(error);
     }
-
     
     if (result.length === 0) {
-      return false;
+      return null;
     }
 
-    return true;
+    return result[0];
   }
 }
 

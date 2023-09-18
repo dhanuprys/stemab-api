@@ -1,6 +1,7 @@
 import process from 'process';
 import Hapi from '@hapi/hapi';
-import routes from './routes';
+import Database from './database';
+import getRouteList from './routes';
 
 const HOST: string = process.env.HTTP_HOST || '0.0.0.0';
 const PORT: string = process.env.HTTP_PORT || '3010';
@@ -13,9 +14,11 @@ const init = async () => {
       cors: true
     }
   });
+  const db = new Database();
+  const connection = await db.getConnection();
 
   // Mendaftarkan seluruh rute pada API
-  server.route(routes);
+  server.route(getRouteList(connection));
 
   await server.start();
 
@@ -24,6 +27,7 @@ const init = async () => {
 
 process.addListener('unhandledRejection', (error) => {
   console.log(error);
+  process.exit(1);
 });
 
 init();

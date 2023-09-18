@@ -1,4 +1,4 @@
-import Database from '../database';
+import { PoolConnection } from 'mariadb';
 import { getCurrentDate } from '../utils';
 
 export type DatabaseBlueprint = {
@@ -10,21 +10,19 @@ export type DatabaseBlueprint = {
 
 
 class PresenceModel {
-  protected connection: any;
-
-  constructor(private database: Database) {
+  constructor(private connection: PoolConnection) {
     
   }
 
-  async setup() {
-    this.connection = await this.database.createNewConnection();
+  async close() {
+    await this.connection.end();
   }
 
   async isLogin(daylock: string, nisn: string): Promise<DatabaseBlueprint | null> {
-    let result: string[] = [];
+    let result: DatabaseBlueprint[] = [];
     try {
       result = await this.connection.query(
-        `SELECT * FROM presence WHERE nisn = ? AND nis = ?`,
+        `SELECT * FROM stemsi.presence WHERE nisn = ? AND daylock = ?`,
         [ nisn, daylock ]
       );
     } catch (error) {
@@ -37,7 +35,7 @@ class PresenceModel {
       return null;
     }
 
-    return result[0] as unknown as DatabaseBlueprint;
+    return result[0];
   }
 
   async login(daylock: string, nisn: string): Promise<DatabaseBlueprint | null> {
@@ -47,7 +45,7 @@ class PresenceModel {
     try {
       result = await this.connection.query(
         `
-          INSERT INTO stemsi.absensi (daylock,nisn,timestamp) 
+          INSERT INTO stemsi.presence (daylock,nisn,timestamp) 
           VALUES (?, ?, ?)
         `,
         [ daylock, nisn, currentDate ]
