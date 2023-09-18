@@ -65,5 +65,5 @@ export function parseNISNLogin(payload: string): any {
  * @returns {string}
  */
 export function getCurrentDate(): string {
-  return moment().tz('Asia/Makasar').format('D-MM-YY, hh:mm:ss');
+  return moment().tz('Asia/Makassar').format('D-MM-YY, hh:mm:ss');
 }
