@@ -85,7 +85,7 @@
 
   loadingTryButton.addEventListener('click', () => {
     if (tryAgainChance <= 0) {
-      window.location.pathname = '/public/index.html';
+      window.location.pathname = 'http://172.16.1.1';
       return;
     }
 
