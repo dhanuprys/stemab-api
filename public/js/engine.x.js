@@ -64,7 +64,7 @@
   }
 
   function mikrotikLogin() {
-    window.location = `http://192.168.55.1/login?x=${encryptTransfer(username.value, password.value)}`;
+    window.location = `http://172.168.1.1/login?x=${encryptTransfer(username.value, password.value)}`;
   }
 
   function listenSearchQueryError() {
@@ -85,7 +85,7 @@
 
   loadingTryButton.addEventListener('click', () => {
     if (tryAgainChance <= 0) {
-      window.location.pathname = 'http://172.16.1.1';
+      window.location.pathname = 'http://172.168.1.1';
       return;
     }
 
