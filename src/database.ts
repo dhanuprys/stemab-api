@@ -3,7 +3,7 @@ import mariadb from 'mariadb';
 
 class Database {
   private pool;
-  private connection;
+  private connection: any;
 
   constructor() {
     this.pool = mariadb.createPool({
@@ -16,7 +16,8 @@ class Database {
     
     console.log('Database initialized');
 
-    this.connection = this.pool.getConnection();
+    // this.connection = this.pool.getConnection();
+    this.connection = null;
   }
 
   public async getConnection() {

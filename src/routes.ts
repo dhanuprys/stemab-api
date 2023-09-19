@@ -1,18 +1,18 @@
 import Hapi from '@hapi/hapi';
 import studentLogin from './handlers/studentLogin';
-import pageScript from './handlers/pageScript';
+import fs from 'fs/promises';
+import path from 'path';
 import { PoolConnection } from 'mariadb';
 
 const getRouteList = (connection: PoolConnection): Hapi.ServerRoute<Hapi.ReqRefDefaults>[] => {
   return [
     {
       method: 'GET',
-      path: '/',
-      handler: async (
-        // request: Hapi.Request<Hapi.ReqRefDefaults>,
-        // h: Hapi.ResponseToolkit<Hapi.ReqRefDefaults>
-      ) => {
-        return 'STEMSI.DEV';
+      path: '/public/{file*}',
+      handler: {
+        directory: { 
+          path: 'public'
+        }
       }
     },
     // Ping server

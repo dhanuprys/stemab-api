@@ -42,13 +42,13 @@ export function parseNISNLogin(payload: string): any {
   const date = new Date();
   const [ nisn, nis ] = Buffer.from(payload, 'base64')
                                     .toString('utf-8')
-                                    .split(`|${date.getUTCHours()+(date.getDay()-1)}|`);
-  console.log(payload);
+                                    .split(`|0x0|`);
+                                    // .split(`|${date.getUTCHours()+(date.getDay()-1)}|`);
+  // console.log(date.getUTCHours()+(date.getDay()-1), payload);
+  console.log(nisn, nis);
   if (
     typeof nisn === undefined 
-    || typeof nis === undefined 
-    || !nisn.match(/^[\d]{10}$/) 
-    || !nis.match(/^[\d]{5}$/)
+    || typeof nis === undefined
   ) {
     return null;
   }

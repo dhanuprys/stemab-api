@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="expires" content="-1" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
+		<title>HOTSPOT STEMSI</title>
+		<link rel="stylesheet" type="text/css" href="http://10.200.1.251:3030/public/css/login.x.css" />
+		<script type="text/javascript" src="http://10.200.1.251:3030/public/js/md5.js"></script>
+	</head>
+	<body>		
+		<div class="filter"></div>
+		
+		<form id="ui-login">
+			<div class="center-container">
+				<div class="login-box">
+					<div id="login-loading" class="login-loading">
+						<img id="loading-img" class="loading-icon spin-object" src="http://10.200.1.251:3030/public/img/loading.png" alt="loading">
+						<h3 id="loading-description" class="loading-description">...</h3>
+						<div id="loading-user" class="loading-user d-none"></div>
+						<button id="loading-try-again" class="loading-try-again">Coba lagi</button>
+						<span id="loading-warning" class="loading-warning">Harap untuk tidak menutup halaman sebelum proses selesai</span>
+					</div>
+					<div id="login-program" class="login-program">
+						<div class="box-header">
+							<h1 class="greeting1" style="margin: 0">Log In</h1>
+							<h2 class="greeting2" style="margin: 0">Selamat Datang</h2>
+							<img class="logo" src="http://10.200.1.251:3030/public/img/stemsi.png" width="60" height="60" />
+						</div>
+						<p class="message">Login untu mengakses layanan internet cepat di SMK Negeri 3 Singaraja
+						</p>
+						<div id="error-message" class="d-none" style="font-size: 13px; color: #FF8080; text-align: center;"></div>
+						<div id="input-username" class="form-input-group">
+							<img src="http://10.200.1.251:3030/public/img/users.png" class="form-icon" alt="user">
+							<input id="username" class="form-field" type="text" placeholder="NISN Cth. 0056xxxxxx" name="username" />
+						</div>
+						<div id="input-password" class="form-input-group">
+							<img src="http://10.200.1.251:3030/public/img/padlocks.png" class="form-icon" alt="pass">
+							<input id="password" class="form-field" placeholder="NIS Cth. 21xxx" type="password" name="password" />
+							<img id="password-toggler" src="http://10.200.1.251:3030/public/img/eye-hide.svg" class="form-icon" alt="pass">
+						</div>
+						<div>
+							<p style="font-size: small; text-align: center">Tidak dapat login? <a style="color: #3897F1" href="/">Hubungi admin</a></p>
+						</div>
+						<div class="form-group">
+							<input id="login-btn" class="submit-button" type="submit" value="MASUK" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="watermark">Powered by <span style="color: #3897F1;">SMK Negeri 3 Singaraja</span></div>
+		</form>
+		<script src="http://10.200.1.251:3030/public/js/engine.x.js"></script>
+	</body>
+</html>

@@ -30,6 +30,7 @@ export default function wrapper(connection: PoolConnection): (request: Hapi.Requ
     if (typeof payload !== 'string') {
       await login.close();
       await student.close();
+      console.log('rejected: payload');
       return createRESTResponse(false, 'rejected');
     }
   
@@ -37,6 +38,7 @@ export default function wrapper(connection: PoolConnection): (request: Hapi.Requ
     if (userCredential === null) {
       await login.close();
       await student.close();
+      console.log('rejected: credential');
       return createRESTResponse(false, 'rejected');
     }
   
@@ -44,6 +46,7 @@ export default function wrapper(connection: PoolConnection): (request: Hapi.Requ
     if (!checkDaylock(userDaylock, true)) {
       await login.close();
       await student.close();
+      console.log('rejected: daylock');
       return createRESTResponse(false, 'rejected');
     }
   
