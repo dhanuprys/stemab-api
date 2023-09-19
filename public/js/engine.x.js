@@ -1,5 +1,5 @@
-(function () {
-  const API_BASEPATH = 'http://10.200.1.251:3030';
+(function () { 
+  const API_BASEPATH = '';
   
   const URLParams = new URLSearchParams(window.location.search);
 
@@ -29,16 +29,34 @@
   }
 
   const backgroundURLs = [
-    'http://10.200.1.251:3030/public/img/bg/bengkel1.jpg',
-    'http://10.200.1.251:3030/public/img/bg/bengkel4.jpg',
-    'http://10.200.1.251:3030/public/img/bg/lap2.jpg',
-    'http://10.200.1.251:3030/public/img/bg/bengkel11.jpg',
-    'http://10.200.1.251:3030/public/img/bg/lap1.jpg',
-    'http://10.200.1.251:3030/public/img/bg/bengkelmm.jpg'
+    '/public/img/bg/bengkel1.jpg',
+    '/public/img/bg/bengkel4.jpg',
+    '/public/img/bg/lap2.jpg',
+    '/public/img/bg/bengkel11.jpg',
+    '/public/img/bg/lap1.jpg',
+    '/public/img/bg/bengkelmm.jpg'
   ];
 
   function randomizeBackground() {
     document.body.style.backgroundImage = `url(${backgroundURLs.random()})`;
+  }
+
+  function generateDaylock() {
+    const date = new Date();
+    const currentFormat = btoa(
+      String(date.getDate())
+      + String(date.getFullYear() / date.getDate())
+      + String(date.getDay())
+    );
+
+    return currentFormat;
+  }
+
+  function generateNISN(nisn, nis) {
+    // const date = new Date();
+    // const payload = btoa(`${nisn}|${date.getUTCHours() + (date.getDay() - 1)}|${nis}`);
+    const payload = btoa(`${nisn}|0x0|${nis}`);
+    return payload;
   }
 
   function encryptTransfer(username, password) {
@@ -67,7 +85,7 @@
 
   loadingTryButton.addEventListener('click', () => {
     if (tryAgainChance <= 0) {
-      window.location.pathname = '/';
+      window.location.pathname = '/public/index.html';
       return;
     }
 
@@ -86,10 +104,10 @@
   passwordToggler.addEventListener('click', () => {
     if (passwordShow) {
       password.setAttribute('type', 'password');
-      passwordToggler.setAttribute('src', 'http://10.200.1.251:3030/public/img/eye-hide.svg');
+      passwordToggler.setAttribute('src', '/public/img/eye-hide.svg');
     } else {
       password.setAttribute('type', 'text');
-      passwordToggler.setAttribute('src', 'http://10.200.1.251:3030/public/img/eye-show.svg');
+      passwordToggler.setAttribute('src', '/public/img/eye-show.svg');
     }
 
     passwordShow = !passwordShow;
@@ -145,7 +163,7 @@
     loginProgram.classList.add('d-none');
     loginLoading.classList.add('d-flex');
     document.body.classList.add('body-blur');
-    loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/loading.png');
+    loadingImg.setAttribute('src', '/public/img/loading.png');
     loadingImg.style.height = '110px';
     loadingImg.style.width = '110px';
     loadingImg.classList.add('spin-object');
@@ -160,11 +178,10 @@
       try {
         pingResponse = await fetch(API_BASEPATH + '/ping');
       } catch (error) {
-        console.log('ERROR PING');
         loadingImg.classList.remove('spin-object');
         loadingWarning.style.display = 'none';
         loadingTryButton.style.display = 'block';
-        loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/cry.png');
+        loadingImg.setAttribute('src', '/public/img/cry.png');
         loadingImg.style.height = '200px';
         loadingImg.style.width = '200px';
         loadingDescription.innerText = 'Tidak dapat menjangkau server...';
@@ -176,7 +193,7 @@
         loadingImg.classList.remove('spin-object');
         loadingWarning.style.display = 'none';
         loadingTryButton.style.display = 'block';
-        loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/cry.png');
+        loadingImg.setAttribute('src', '/public/img/cry.png');
         loadingImg.style.height = '200px';
         loadingImg.style.width = '200px';
         loadingDescription.innerText = 'Ups, ada kesalahan pada server...';
@@ -195,19 +212,23 @@
             method: 'POST'
           });
         } catch (error) {
-          console.log('ERROR PING');
+          loadingWarning.style.display = 'none';
+          loadingTryButton.style.display = 'block';
           return;
         }
 
         if (!loginResponse.ok) {
           console.log('NOT OK: LOGIN');
+          loadingWarning.style.display = 'none';
+          loadingTryButton.style.display = 'block';
           return;
         }
 
         try {
           loginJSON = await loginResponse.json();
         } catch (error) {
-          console.log('PARSE ERROR');
+          loadingWarning.style.display = 'none';
+          loadingTryButton.style.display = 'block';
           return;
         }
 
@@ -218,15 +239,15 @@
 
           switch (loginJSON.message) {
             case 'rejected':
-              loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/cry.png');
+              loadingImg.setAttribute('src', '/public/img/cry.png');
               loadingDescription.innerText = 'Terjadi kesalahan...';
               break;
             case 'unknown':
-              loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/afraid.png');
+              loadingImg.setAttribute('src', '/public/img/afraid.png');
               loadingDescription.innerText = 'Ups, NISN atau NIS tidak ditemukan...';
               break;
             default:
-              loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/cry.png');
+              loadingImg.setAttribute('src', '/public/img/cry.png');
               loadingDescription.innerText = 'Terjadi kesalahan...';
           }
 
@@ -243,21 +264,21 @@
 
             switch (loginJSON.message) {
               case 'already':
-                loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/happy.png');
+                loadingImg.setAttribute('src', '/public/img/happy.png');
                 loadingDescription.innerText = 'Kamu sudah absen sebelumnya...';
                 loadingUser.classList.remove('d-none');
                 loadingUser.innerText = loginJSON.data.name;
                 loadingWarning.classList.add('d-none');
                 break;
               case 'created':
-                loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/happy.png');
+                loadingImg.setAttribute('src', '/public/img/happy.png');
                 loadingDescription.innerText = 'Kamu berhasil melakukan absensi...';
                 loadingUser.classList.remove('d-none');
                 loadingUser.innerText = loginJSON.data.name;
                 loadingWarning.classList.add('d-none');
                 break;
               default:
-                loadingImg.setAttribute('src', 'http://10.200.1.251:3030/public/img/cry.png');
+                loadingImg.setAttribute('src', '/public/img/cry.png');
                 loadingDescription.innerText = 'Terjadi kesalahan...';
             }
 

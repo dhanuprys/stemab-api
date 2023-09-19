@@ -53,7 +53,7 @@ body {
 }
 
 .center-container {
-  width: 400px;
+  width: 430px;
   position: absolute;
   top: 0;
   left: 50%;
@@ -229,7 +229,7 @@ body {
   text-shadow: 1px 2px 24px rgba(0, 0, 0, 1);
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 430px) {
   body {
     background-image: none;
   }

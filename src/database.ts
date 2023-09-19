@@ -16,8 +16,8 @@ class Database {
     
     console.log('Database initialized');
 
-    // this.connection = this.pool.getConnection();
-    this.connection = null;
+    this.connection = this.pool.getConnection();
+    // this.connection = null;
   }
 
   public async getConnection() {
