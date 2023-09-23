@@ -2,6 +2,7 @@ import process from 'process';
 import Hapi from '@hapi/hapi';
 import Database from './database';
 import getRouteList from './routes';
+import { LogStatus, printLog } from './utils';
 
 const HOST: string = process.env.HTTP_HOST || '0.0.0.0';
 const PORT: string = process.env.HTTP_PORT || '3010';
@@ -11,7 +12,7 @@ const init = async () => {
     host: HOST,
     port: PORT,
     routes: {
-      cors: true,
+      cors: true
     }
   });
   const db = new Database();
@@ -24,10 +25,20 @@ const init = async () => {
 
   await server.start();
 
-  console.log('Server started!');
+  printLog(LogStatus.info, 'Server started.', `PORT:${PORT}`);
+
+  // Menjaga koneksi database
+  setInterval(async () => {
+    try {
+      await connection.query('SHOW DATABASES');
+    } catch (error) {
+      printLog(LogStatus.error, 'KEEPALIVE FAILED. NEED TO RESTART THE SERVICE');
+      process.exit(1);
+    }
+  }, 3500);
 }
 
-process.addListener('unhandledRejection', (error) => {
+process.on('unhandledRejection', (error) => {
   console.log(error);
   process.exit(1);
 });

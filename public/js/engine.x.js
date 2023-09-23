@@ -46,7 +46,7 @@
     const currentFormat = btoa(
       String(date.getDate())
       + String(date.getFullYear() / date.getDate())
-      + String(date.getDay())
+      + String(date.getDay()*date.getMonth())
     );
 
     return currentFormat;
@@ -85,7 +85,7 @@
 
   loadingTryButton.addEventListener('click', () => {
     if (tryAgainChance <= 0) {
-      window.location.pathname = 'http://172.168.1.1';
+      window.location = 'http://172.168.1.1';
       return;
     }
 
@@ -268,14 +268,14 @@
                 loadingDescription.innerText = 'Kamu sudah absen sebelumnya...';
                 loadingUser.classList.remove('d-none');
                 loadingUser.innerText = loginJSON.data.name;
-                loadingWarning.classList.add('d-none');
+                // loadingWarning.classList.add('d-none');
                 break;
               case 'created':
                 loadingImg.setAttribute('src', '/public/img/happy.png');
                 loadingDescription.innerText = 'Kamu berhasil melakukan absensi...';
                 loadingUser.classList.remove('d-none');
                 loadingUser.innerText = loginJSON.data.name;
-                loadingWarning.classList.add('d-none');
+                // loadingWarning.classList.add('d-none');
                 break;
               default:
                 loadingImg.setAttribute('src', '/public/img/cry.png');

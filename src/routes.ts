@@ -1,7 +1,5 @@
 import Hapi from '@hapi/hapi';
 import studentLogin from './handlers/studentLogin';
-import fs from 'fs/promises';
-import path from 'path';
 import { PoolConnection } from 'mariadb';
 
 const getRouteList = (connection: PoolConnection): Hapi.ServerRoute<Hapi.ReqRefDefaults>[] => {
@@ -29,6 +27,13 @@ const getRouteList = (connection: PoolConnection): Hapi.ServerRoute<Hapi.ReqRefD
       path: '/a/{daylock}',
       handler: studentLogin(connection)
     },
+    {
+      method: 'GET',
+      path: '/restart',
+      handler: () => {
+        process.exit(1);
+      }
+    }
     // Dynamic script resources
     // {
     //   method: 'GET',

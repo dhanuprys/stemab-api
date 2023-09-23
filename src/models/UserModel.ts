@@ -1,18 +1,19 @@
 import { PoolConnection } from 'mariadb';
-import { LoginCredential } from '../utils';
+import { LogStatus, LoginCredential, printLog } from '../utils';
 
 export type DatabaseBlueprint = {
   id: number,
+  admin: number | null,
   name: string,
-  nisn: string,
-  nis: string
+  username: string,
+  password: string
 };
 
 /**
  * Menyimpan NISN dan NIS setiap siswa.
  * Digunakan dalam melakukan proses login ke database
  */
-class StudentModel {
+class UserModel {
   constructor(private connection: PoolConnection) {
     
   }
@@ -29,11 +30,12 @@ class StudentModel {
     let result: DatabaseBlueprint[] = [];
     try {
       result = await this.connection.query(
-        `SELECT * FROM stemsi.student WHERE nisn = ? AND nis = ?`,
-        [ login.nisn, login.nis ]
+        `SELECT * FROM stemsi.users WHERE username = ? AND password = ?`,
+        [ login.username, login.password ]
       );
     } catch (error) {
-      console.log(error);
+      printLog(LogStatus.error, error as unknown as string);
+      // process.exit(1);
     }
     
     if (result.length === 0) {
@@ -44,4 +46,4 @@ class StudentModel {
   }
 }
 
-export default StudentModel;
+export default UserModel;

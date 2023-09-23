@@ -1,8 +1,16 @@
 import moment from 'moment-timezone';
+import chalk from 'chalk';
 
 export type LoginCredential = {
-  nisn: string,
-  nis: string
+  username: string,
+  password: string
+}
+
+export enum LogStatus {
+  info = 'info',
+  success = 'success',
+  warning = 'warning',
+  error = 'error'
 }
 
 /**
@@ -23,7 +31,7 @@ export function checkDaylock(
   const currentFormat: string = Buffer.from(
     String(date.getDate())
     + String(date.getFullYear()/date.getDate())
-    + String(date.getDay())
+    + String(date.getDay()*date.getMonth())
   ).toString('base64');
 
   return currentFormat === encryptedTime;
@@ -39,24 +47,44 @@ export function checkDaylock(
  * @returns {string | null}
  */
 export function parseNISNLogin(payload: string): any {
-  const date = new Date();
-  const [ nisn, nis ] = Buffer.from(payload, 'base64')
+  // const date = new Date();
+  const [ username, password ] = Buffer.from(payload, 'base64')
                                     .toString('utf-8')
                                     .split(`|0x0|`);
                                     // .split(`|${date.getUTCHours()+(date.getDay()-1)}|`);
   // console.log(date.getUTCHours()+(date.getDay()-1), payload);
-  console.log(nisn, nis);
+  // console.log(username, password);
   if (
-    typeof nisn === undefined 
-    || typeof nis === undefined
+    typeof username === undefined 
+    || typeof password === undefined
   ) {
     return null;
   }
 
   return {
-    nisn,
-    nis
+    username,
+    password
   };
+}
+
+export function printLog(status: LogStatus, ...text: string[]) {
+  let outputStatus = 'info';
+  switch (status) {
+    case LogStatus.info:
+      outputStatus = chalk.blue('info');
+    break;
+    case LogStatus.success:
+      outputStatus = chalk.green('success');
+    break;
+    case LogStatus.warning:
+      outputStatus = chalk.yellow('warning');
+    break;
+    case LogStatus.error:
+      outputStatus = chalk.red('error');
+    break;
+  }
+
+  console.log(chalk.bold(`[${getCurrentDate()}][${outputStatus}]>`), ...text);
 }
 
 /**
@@ -65,5 +93,5 @@ export function parseNISNLogin(payload: string): any {
  * @returns {string}
  */
 export function getCurrentDate(): string {
-  return moment().tz('Asia/Makassar').format('D-MM-YY, HH:mm:ss');
+  return moment().tz('Asia/Makassar').format('D-MM-YYYY, HH:mm:ss');
 }

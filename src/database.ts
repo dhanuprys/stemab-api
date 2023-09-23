@@ -1,5 +1,6 @@
 import process from 'process';
 import mariadb from 'mariadb';
+import { LogStatus, printLog } from './utils';
 
 class Database {
   private pool;
@@ -14,7 +15,7 @@ class Database {
       port: process.env.DB_PORT || 3306,
     });
     
-    console.log('Database initialized');
+    printLog(LogStatus.info, 'Database initialized');
 
     this.connection = this.pool.getConnection();
     // this.connection = null;
@@ -35,9 +36,8 @@ class Database {
 
     try {
       connection = await this.pool.getConnection();
-      console.log('Created');
     } catch (error) {
-      console.log('Database error: parent');
+      printLog(LogStatus.error, 'Database error: parent');
     }
 
     return connection;
